@@ -43,10 +43,12 @@ function updateFacilityList() {
 }
 
 function purchaseFacility(facility) {
+    const facilityIndex = facilities.indexOf(facility);
+
     if (itsukiCount >= facility.cost) {
         itsukiCount -= facility.cost;
         facility.owned++;
-        facility.cost *= 2; // 施設を購入するたびに値段を2倍に更新
+        facility.cost = Math.floor(facility.baseCost * Math.pow(2, facility.owned)); // 施設を購入するたびに値段を2倍に更新
         startGeneratingIncome(facility);
         updateDisplay();
         saveGame(); // 施設を購入したらセーブデータを保存
@@ -57,6 +59,7 @@ function startGeneratingIncome(facility) {
     setInterval(() => {
         itsukiCount += facility.baseIncome * facility.owned;
         updateDisplay();
+        saveGame(); // 自動増加したらセーブデータを保存
     }, 1000);
 }
 
@@ -74,8 +77,12 @@ if (savedData) {
         for (let i = 0; i < savedData.facilities.length; i++) {
             facilities[i].owned = savedData.facilities[i].owned;
             facilities[i].cost = savedData.facilities[i].cost;
+            // セーブデータから読み込む際に、タイマーを再設定
+            if (facilities[i].owned > 0) {
+                startGeneratingIncome(facilities[i]);
+            }
         }
     }
     updateDisplay();
-    updateFacilityList(); // セーブデータから施設情報を読み込んで表示更新
+    updateFacilityList();
 }
