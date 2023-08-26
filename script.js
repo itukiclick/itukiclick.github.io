@@ -70,9 +70,12 @@ function saveGame() {
 
 if (savedData) {
     itsukiCount = savedData.itsukiCount || itsukiCount;
-    facilities = savedData.facilities || facilities;
+    if (savedData.facilities) {
+        for (let i = 0; i < savedData.facilities.length; i++) {
+            facilities[i].owned = savedData.facilities[i].owned;
+            facilities[i].cost = savedData.facilities[i].cost;
+        }
+    }
+    updateDisplay();
     updateFacilityList(); // セーブデータから施設情報を読み込んで表示更新
 }
-
-// ゲームの開始時に施設一覧を表示
-updateFacilityList();
