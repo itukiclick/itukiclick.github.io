@@ -46,6 +46,7 @@ function purchaseFacility(facility) {
     if (itsukiCount >= facility.cost) {
         itsukiCount -= facility.cost;
         facility.owned++;
+        facility.cost *= 2; // 施設を購入するたびに値段を2倍に更新
         startGeneratingIncome(facility);
         updateDisplay();
         saveGame(); // 施設を購入したらセーブデータを保存
